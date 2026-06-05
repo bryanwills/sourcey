@@ -10,7 +10,7 @@ import type {
   ModuleSpec,
   RustdocDiagnostic,
 } from "./rustdoc-types.js";
-import { itemAnchor, renderModulePage, type RenderContext } from "./rustdoc-render.js";
+import { itemAnchor, itemDisplayName, renderModulePage, type RenderContext } from "./rustdoc-render.js";
 import { renderCodeBlock } from "../utils/markdown.js";
 
 export interface RustdocLoaderDiagnostic {
@@ -335,6 +335,8 @@ function signatureForItem(item: Item): string | null {
       return `macro_rules! ${item.name ?? ""}`;
     case "proc_macro":
       return `#[${item.inner.macro_kind === "derive" ? "derive" : "proc_macro"}] ${item.name ?? ""}`;
+    case "use":
+      return item.inner.is_glob ? `pub use ${item.inner.source}::*;` : `pub use ${item.inner.source};`;
     default:
       return item.name ? item.path.join("::") : null;
   }
@@ -387,23 +389,24 @@ function itemKindLabel(item: Item): string {
 
 function collectHeadings(items: Item[]): PageHeading[] {
   return items
-    .filter((i) => i.name)
     .map((i) => ({
       id: itemAnchor(i),
-      text: i.name ?? "",
-      level: 3,
-    }));
+      text: itemDisplayName(i),
+      level: 3 as const,
+    }))
+    .filter((heading) => heading.text);
 }
 
 function collectSearchEntries(items: Item[], moduleTitle: string): PageSearchEntry[] {
   const out: PageSearchEntry[] = [];
   for (const item of items) {
-    if (!item.name) continue;
-    const sig = signatureForItem(item) ?? item.name;
+    const name = itemDisplayName(item);
+    if (!name) continue;
+    const sig = signatureForItem(item) ?? name;
     const docs = item.docs_markdown ?? "";
     const anchor = itemAnchor(item);
     out.push({
-      title: `${itemKindLabel(item).replace("rust ", "")} ${item.name}`,
+      title: `${itemKindLabel(item).replace("rust ", "")} ${name}`,
       content: `${sig}\n${docs}`.slice(0, 500),
       anchor,
       category: itemKindLabel(item),

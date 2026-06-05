@@ -4,6 +4,7 @@ import {
   encodeGenericSegment,
   encodeImplAnchor,
   itemAnchor,
+  itemDisplayName,
   renderDoctestBadges,
   renderItemHtml,
   renderModulePage,
@@ -122,6 +123,61 @@ describe("anchor encoder", () => {
       doctests: [],
     };
     expect(itemAnchor(fn)).toBe("fn.greet");
+  });
+
+  it("derives re-export name, anchor and `pub use` signature from inner, not the null item.name", () => {
+    const reexport: Item = {
+      id: "use-nodeid",
+      name: null,
+      path: [],
+      visibility: { kind: "public" },
+      source: null,
+      docs_markdown: null,
+      doc_aliases: [],
+      deprecation: null,
+      stability: null,
+      feature_gates: [],
+      attrs_structured: [],
+      links: {},
+      inner: {
+        kind: "use",
+        source: "runx_parser::graph::NodeId",
+        name: "NodeId",
+        target_id: null,
+        is_glob: false,
+      },
+      doctests: [],
+    };
+
+    expect(itemDisplayName(reexport)).toBe("NodeId");
+    expect(itemAnchor(reexport)).toBe("reexport.NodeId");
+    const html = renderItemHtml(reexport, baseCtx());
+    expect(html).toContain("NodeId");
+    expect(html).toContain("pub use runx_parser::graph::NodeId;");
+    // The bug: heading fell back to the raw anchor ("reexport.") with no name.
+    expect(html).not.toMatch(/>\s*reexport\.\s*</);
+  });
+
+  it("renders glob re-exports with a `::*` name and signature", () => {
+    const glob: Item = {
+      id: "use-glob",
+      name: null,
+      path: [],
+      visibility: { kind: "public" },
+      source: null,
+      docs_markdown: null,
+      doc_aliases: [],
+      deprecation: null,
+      stability: null,
+      feature_gates: [],
+      attrs_structured: [],
+      links: {},
+      inner: { kind: "use", source: "runx_parser::graph", name: "", target_id: null, is_glob: true },
+      doctests: [],
+    };
+
+    expect(itemDisplayName(glob)).toBe("graph::*");
+    expect(renderItemHtml(glob, baseCtx())).toContain("pub use runx_parser::graph::*;");
   });
 });
 

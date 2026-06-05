@@ -95,7 +95,7 @@ export function itemAnchor(item: Item): string {
     case "struct_field":
       return `structfield.${slug(item.name)}`;
     case "use":
-      return `reexport.${slug(item.name)}`;
+      return `reexport.${slug(useBaseName(item.inner))}`;
     case "module":
       return `mod.${slug(item.name)}`;
     case "impl":
@@ -118,6 +118,24 @@ function implAnchor(item: Item): string {
 function slug(name: string | null | undefined): string {
   if (!name) return "";
   return name;
+}
+
+/** Base name of a re-export: the imported name, or the last path segment. */
+function useBaseName(inner: { name: string; source: string }): string {
+  return inner.name || (inner.source.split("::").filter(Boolean).pop() ?? inner.source);
+}
+
+/**
+ * Heading/anchor display name for an item. Re-exports (`use`) carry their name
+ * on `inner`, not the top-level `item.name` which rustdoc leaves null, so we
+ * derive it from the imported name or the re-exported path (with `::*` for globs).
+ */
+export function itemDisplayName(item: Item): string {
+  if (item.inner.kind === "use") {
+    const base = useBaseName(item.inner);
+    return item.inner.is_glob ? `${base}::*` : base;
+  }
+  return item.name ?? "";
 }
 
 // ---------------------------------------------------------------------------
@@ -446,7 +464,7 @@ export function renderItemHtml(item: Item, ctx: RenderContext): string {
     apiSectionAnchor({
       level: 4,
       id: anchor,
-      text: item.name ?? anchor,
+      text: itemDisplayName(item) || anchor,
       className: "code-header rust-item-header",
     }),
     signatureHtml,
@@ -694,6 +712,12 @@ function fallbackSignatureText(item: Item): string | null {
       return `macro_rules! ${item.name ?? ""}`;
     case "proc_macro":
       return `#[${item.inner.macro_kind === "derive" ? "derive" : "proc_macro"}] ${item.name ?? ""}`;
+    case "use": {
+      const { source, name, is_glob } = item.inner;
+      if (is_glob) return `pub use ${source}::*;`;
+      const lastSegment = source.split("::").filter(Boolean).pop();
+      return name && name !== lastSegment ? `pub use ${source} as ${name};` : `pub use ${source};`;
+    }
     default:
       return null;
   }
@@ -833,9 +857,9 @@ export function renderModulePage(
     sidebar.push({
       label: group,
       items: members
-        .filter((m) => m.name)
-        .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""))
-        .map((m) => ({ text: m.name ?? "", anchor: itemAnchor(m) })),
+        .map((m) => ({ text: itemDisplayName(m), anchor: itemAnchor(m) }))
+        .filter((entry) => entry.text)
+        .sort((a, b) => a.text.localeCompare(b.text)),
     });
   }
 
