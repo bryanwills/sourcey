@@ -39,7 +39,7 @@ alternative renderers) can use the same pipeline as a library.
 
 - Homepage: [sourcey.com](https://sourcey.com)
 - Docs: [sourcey.com/docs](https://sourcey.com/docs)
-- rustdoc adapter guide: [sourcey.com/docs/adapters/rustdoc](https://sourcey.com/docs/adapters/rustdoc)
+- rustdoc adapter guide: [sourcey.com/docs/rustdoc-integration](https://sourcey.com/docs/rustdoc-integration)
 - API docs: [docs.rs/sourcey](https://docs.rs/sourcey)
 - Repository: [github.com/sourcey/sourcey](https://github.com/sourcey/sourcey)
 

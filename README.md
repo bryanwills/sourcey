@@ -2,18 +2,14 @@
 
 > Docs straight from the source.
 
-Sourcey tells the whole product story. It turns specs, code, rich guides, changelog, roadmap pages, examples, and portable context files from your project into static HTML you can deploy anywhere.
+Sourcey turns OpenAPI, MCP, Doxygen XML, godoc, rustdoc, and Markdown into one static HTML site you own: reference, guides, changelog, roadmap, and llms.txt from the same build, deployable anywhere.
 
-No dashboard. No runtime. No API calls to render your own documentation.
+Everything renders at build time: no dashboard, no runtime, no API calls to render your own documentation.
 
 [![npm](https://img.shields.io/npm/v/sourcey)](https://www.npmjs.com/package/sourcey)
 [![build](https://img.shields.io/github/actions/workflow/status/sourcey/sourcey/ci.yml?branch=main)](https://github.com/sourcey/sourcey/actions)
 [![node](https://img.shields.io/node/v/sourcey)](https://nodejs.org)
 [![license](https://img.shields.io/npm/l/sourcey)](LICENSE)
-[![Go Reference](https://pkg.go.dev/badge/github.com/sourcey/sourcey/go/sourcey-godoc.svg)](https://pkg.go.dev/github.com/sourcey/sourcey/go/sourcey-godoc)
-[![Go Report Card](https://goreportcard.com/badge/github.com/sourcey/sourcey/go/sourcey-godoc)](https://goreportcard.com/report/github.com/sourcey/sourcey/go/sourcey-godoc)
-[![crates.io](https://img.shields.io/crates/v/sourcey.svg)](https://crates.io/crates/sourcey)
-[![docs.rs](https://docs.rs/sourcey/badge.svg)](https://docs.rs/sourcey)
 
 ```bash
 npx sourcey init
@@ -60,6 +56,9 @@ Then `sourcey init` to scaffold a new project, or `sourcey build` against an exi
 
 ### Standalone Go docs generator
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/sourcey/sourcey/go/sourcey-godoc.svg)](https://pkg.go.dev/github.com/sourcey/sourcey/go/sourcey-godoc)
+[![Go Report Card](https://goreportcard.com/badge/github.com/sourcey/sourcey/go/sourcey-godoc)](https://goreportcard.com/report/github.com/sourcey/sourcey/go/sourcey-godoc)
+
 For Go-only consumers without a JavaScript toolchain, `sourcey-godoc` ships as a separate native binary. It produces static Go docs sites or portable `godoc.json` snapshots.
 
 | Path     | Command                                                                                           |
@@ -68,18 +67,30 @@ For Go-only consumers without a JavaScript toolchain, `sourcey-godoc` ships as a
 | Homebrew | `brew install sourcey/tap/sourcey-godoc`                                                          |
 | Scoop    | `scoop bucket add sourcey https://github.com/sourcey/scoop-bucket && scoop install sourcey-godoc` |
 
+### Rust snapshot converter
+
+[![crates.io](https://img.shields.io/crates/v/sourcey.svg)](https://crates.io/crates/sourcey)
+[![docs.rs](https://docs.rs/sourcey/badge.svg)](https://docs.rs/sourcey)
+
+The `rustdoc()` adapter consumes nightly rustdoc JSON through the [`sourcey`](https://crates.io/crates/sourcey) companion crate and its `sourcey-rustdoc` converter, so CI can build Rust API docs from a committed snapshot on a stable toolchain. See [docs/adapters/rustdoc.md](docs/adapters/rustdoc.md).
+
 ## Quick start
 
 ```bash
-# From a single OpenAPI spec
-sourcey build api.yaml -o docs/
-
-# Multi-page site (reads sourcey.config.ts)
-sourcey build -o docs/
+# Scaffold a project (detects OpenAPI specs and Doxyfiles)
+npx sourcey init
 
 # Dev server with hot reload
 sourcey dev
+
+# Build static HTML to dist/
+sourcey build
+
+# Quick build from a single OpenAPI spec
+sourcey build api.yaml -o dist/
 ```
+
+In CI, the [`sourcey/build-docs`](https://github.com/sourcey/build-docs) GitHub Action runs the build and deploys to GitHub Pages; see [deploying](https://sourcey.com/docs/deploying).
 
 ## Configuration
 
@@ -168,8 +179,8 @@ cd sourcey && npm install
 npm run build && npm test
 cd go/sourcey-godoc && go test ./... && go vet ./...
 
-# Run the demo site
-cd demo && npx tsx ../src/cli.ts dev
+# Run the in-repo docs site against your working copy
+cd docs && npx tsx ../src/cli.ts dev
 ```
 
 ## License

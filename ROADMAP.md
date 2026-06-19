@@ -1,6 +1,6 @@
 # Roadmap
 
-What's coming for Sourcey.
+What's coming for Sourcey. Last updated: June 2026.
 
 ## Shipped
 
@@ -27,6 +27,11 @@ What's coming for Sourcey.
 ### API reference
 
 - **API playground**: try-it-live requests with parameter inputs, auth, cURL export
+
+### Agent surface
+
+- **Docs as an MCP server**: serve the built documentation graph (pages, search, symbol lookup) over MCP so agents can query the docs instead of crawling them
+- **Per-page markdown endpoints**: emit a `.md` view beside every HTML page so agents and copy-page-as-markdown tools read the exact source of what humans see
 
 ### Ecosystem
 

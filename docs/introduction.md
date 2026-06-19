@@ -17,4 +17,4 @@ Sourcey turns OpenAPI specs, MCP snapshots, Doxygen XML, Go packages, Rust crate
 
 ## Why teams pick it
 
-Sourcey keeps the docs surface simple: commit the source files, run the build, deploy the generated site. No dashboard. No per-seat docs editor. No vendor page runtime.
+Sourcey keeps the docs surface simple: commit the source files, run the build, deploy the generated site. There is no dashboard, no per-seat docs editor, and no vendor page runtime in the chain.

@@ -16,7 +16,7 @@ this crate directly. It is published for:
 - CI tools that drive snapshot generation from Rust
 
 If you just want sourcey for your project, see
-[sourcey.com/docs/adapters/rustdoc](https://sourcey.com/docs/adapters/rustdoc).
+[sourcey.com/docs/rustdoc-integration](https://sourcey.com/docs/rustdoc-integration).
 
 ## CLI
 

@@ -46,7 +46,7 @@
 //!
 //! - <https://sourcey.com> - product homepage
 //! - <https://sourcey.com/docs> - full documentation
-//! - <https://sourcey.com/docs/adapters/rustdoc> - rustdoc adapter guide
+//! - <https://sourcey.com/docs/rustdoc-integration> - rustdoc adapter guide
 //! - <https://github.com/sourcey/sourcey> - source repository
 
 pub use sourcey_rustdoc as rustdoc;
