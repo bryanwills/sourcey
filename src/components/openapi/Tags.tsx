@@ -34,7 +34,7 @@ export function Tags({ tags, serverUrl }: TagsProps) {
                   </div>
                 )}
                 <div class="mb-2 flex flex-wrap items-center gap-2">
-                  <h1 class="text-xl font-bold text-[rgb(var(--color-gray-900))] dark:text-[rgb(var(--color-gray-200))]">
+                  <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-[rgb(var(--color-gray-900))] dark:text-[rgb(var(--color-gray-200))]">
                     {displayName}
                   </h1>
                   {tag.summary && tag.summary !== tag.name && (

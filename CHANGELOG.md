@@ -2,6 +2,12 @@
 
 All notable changes to Sourcey. Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## Unreleased
+
+### Changed
+
+- OpenAPI tag headings render at the operation title size instead of a step below it, so a tag's section heading is no longer smaller than the operations nested under it.
+
 ## 3.6.4 - 2026-06-24
 
 ### Fixed
