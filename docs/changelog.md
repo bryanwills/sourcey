@@ -5,6 +5,10 @@ description: Recent Sourcey releases.
 
 # Changelog
 
+## 3.6.4
+
+Sourcey 3.6.4 makes OpenAPI tag introductions reachable from the sidebar, with tag headings in the navigation now linking to their `#tag-name` section, and lets operation descriptions fill the content column instead of confining to the default prose measure when an example or code panel sits alongside them.
+
 ## 3.6.3
 
 Sourcey 3.6.3 renders author-provided OpenAPI examples. Named `examples` and a single `example` on responses and request bodies now take priority over the schema-generated shape, every media type is shown rather than only the first, and a switcher moves between multiple examples.
