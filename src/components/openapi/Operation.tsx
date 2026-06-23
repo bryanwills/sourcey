@@ -60,7 +60,7 @@ export function Operation({ operation: op, serverUrl }: OperationProps) {
         {/* Left: content column */}
         <div class="flex-1 min-w-0">
           {op.description && (
-            <Markdown content={op.description} class="mb-6" />
+            <Markdown content={op.description} class="mb-6 max-w-none" />
           )}
 
           {hasBody && (

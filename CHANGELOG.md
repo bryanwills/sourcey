@@ -7,6 +7,7 @@ All notable changes to Sourcey. Format based on [Keep a Changelog](https://keepa
 ### Fixed
 
 - OpenAPI sidebar tag headings now link to their tag introduction section, so long `tags[].description` guidance is directly reachable from navigation.
+- OpenAPI operation descriptions now fill the content column instead of the default prose measure, so the text no longer re-confines to ~65 characters when an operation's example/code panel is present.
 
 ## 3.6.3 - 2026-06-17
 
