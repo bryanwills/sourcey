@@ -112,7 +112,7 @@ async function expandGlob(pattern: string, configDir: string): Promise<string[]>
     entries = await readdir(dir, { withFileTypes: true });
   } catch (err) {
     if ((err as NodeJS.ErrnoException).code === "ENOENT") {
-      throw new Error(`Glob directory not found: ${dir}`);
+      throw new Error(`Glob directory not found: ${dir}`, { cause: err });
     }
     throw err;
   }

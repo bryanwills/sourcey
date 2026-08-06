@@ -58,7 +58,7 @@ function parseContent(content: string, format: SpecFormat): Record<string, unkno
     try {
       return JSON.parse(content) as Record<string, unknown>;
     } catch (e) {
-      throw new Error(`Failed to parse JSON spec: ${(e as Error).message}`);
+      throw new Error(`Failed to parse JSON spec: ${(e as Error).message}`, { cause: e });
     }
   }
 
@@ -70,7 +70,7 @@ function parseContent(content: string, format: SpecFormat): Record<string, unkno
     return parsed as Record<string, unknown>;
   } catch (e) {
     if (e instanceof yaml.YAMLException) {
-      throw new Error(`Failed to parse YAML spec: ${e.message}`);
+      throw new Error(`Failed to parse YAML spec: ${e.message}`, { cause: e });
     }
     throw e;
   }

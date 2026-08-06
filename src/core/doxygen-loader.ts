@@ -105,7 +105,7 @@ export async function loadDoxygenTab(
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    throw new Error(`Failed to load Doxygen XML from ${config.xml}: ${message}`);
+    throw new Error(`Failed to load Doxygen XML from ${config.xml}: ${message}`, { cause: error });
   }
 
   const pages = new Map<string, MarkdownPage>();

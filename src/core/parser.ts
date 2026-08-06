@@ -40,7 +40,7 @@ export async function parseSpec(loaded: LoadedSpec): Promise<ParsedSpec> {
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    throw new Error(`Failed to parse OpenAPI spec: ${message}`);
+    throw new Error(`Failed to parse OpenAPI spec: ${message}`, { cause: error });
   }
 }
 
