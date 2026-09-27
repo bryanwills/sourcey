@@ -2,6 +2,12 @@
 
 All notable changes to Sourcey. Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## 3.6.11 - 2026-09-27
+
+### Changed
+
+- Point the “Docs by Sourcey” attribution in every theme to the open-source overview.
+
 ## 3.6.10 - 2026-09-26
 
 ### Fixed

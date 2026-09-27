@@ -336,7 +336,7 @@ export function ReaderPage({ children }: { children?: ComponentChildren }) {
                     </Link>
                   ))}
                   <span class="sourcey-attribution">
-                    <a href="https://sourcey.com" target="_blank" rel="noopener noreferrer">
+                    <a href="https://sourcey.com/oss" target="_blank" rel="noopener noreferrer">
                       Docs by Sourcey
                       <Icon name="northeast" size={12} />
                     </a>
