@@ -47,6 +47,12 @@ export interface SourceyAstroOptions {
    * standalone renderer prunes its output directory before writing.
    */
   allowRootOutput?: boolean;
+  /**
+   * Serve a copy of the first page at the mount root, so `routeBase` itself
+   * opens the docs. On by default. Turn it off when an Astro page owns the
+   * root, such as a product page at `/docs` above the documentation.
+   */
+  landingPage?: boolean;
 }
 
 interface AstroIntegration {
@@ -128,6 +134,7 @@ export default function sourceyAstro(options: SourceyAstroOptions = {}): AstroIn
                   logger,
                   strictChangelog: options.strictChangelog,
                   generateOgImages: phaseGenerateOgImages(options.dev, false),
+                  landingPage: options.landingPage,
                 }),
               ],
             },
@@ -157,7 +164,7 @@ export default function sourceyAstro(options: SourceyAstroOptions = {}): AstroIn
           strictChangelog: options.strictChangelog,
           generateOgImages: phaseGenerateOgImages(options.build, true),
         });
-        await writeSourceySite(sourceySite);
+        await writeSourceySite(sourceySite, { landingPage: options.landingPage });
         await writeAstroRouteAlias({
           outputRoot: fileURLToPath(dir),
           outputDir,
@@ -234,6 +241,7 @@ function sourceyAstroDevPlugin(options: {
   logger: AstroLogger;
   strictChangelog?: boolean;
   generateOgImages: boolean;
+  landingPage?: boolean;
 }): Plugin {
   const { prepared, logger } = options;
   let buildPromise: Promise<void> | null = null;
@@ -247,7 +255,7 @@ function sourceyAstroDevPlugin(options: {
         strictChangelog: options.strictChangelog,
         generateOgImages: options.generateOgImages,
       });
-      await writeSourceySite(sourceySite);
+      await writeSourceySite(sourceySite, { landingPage: options.landingPage });
       built = true;
       logger.info(
         `Sourcey: ready at ${displayRoute(prepared.routeBase)} (${sourceySite.pageCount} pages)`,

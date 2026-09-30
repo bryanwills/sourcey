@@ -5,6 +5,10 @@ description: Recent Sourcey releases.
 
 # Changelog
 
+## 3.6.12
+
+Sourcey 3.6.12 adds `landingPage: false` to `sourcey/astro`, so an Astro page can own the mount root, such as a product page at `/docs`, while Sourcey writes every documentation page beneath it.
+
 ## 3.6.6
 
 Sourcey 3.6.6 adds the `reader` theme for specifications and long-form documentation, makes `theme.name` the canonical renderer selector, standardizes “Docs by Sourcey” attribution across every theme, and hardens Astro and Cloudflare hosting behavior. The deprecated `theme.preset` key remains accepted through the 3.x line.

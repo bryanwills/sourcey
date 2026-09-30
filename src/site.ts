@@ -49,6 +49,8 @@ export interface SourceySiteArtifacts {
 
 export interface SourceySiteWriteOptions {
   embeddable?: boolean;
+  /** Write a copy of the first page as the site root. On by default. */
+  landingPage?: boolean;
 }
 
 export async function buildSourceySite(
@@ -113,6 +115,7 @@ export async function writeSourceySite(
     llmsTxt: site.llmsTxt,
     llmsFullTxt: site.llmsFullTxt,
     embeddable: options.embeddable,
+    landingPage: options.landingPage,
     ogImages: site.ogImages,
     extraFiles: site.extraFiles,
   });

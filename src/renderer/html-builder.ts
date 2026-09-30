@@ -66,6 +66,7 @@ export async function buildSite(
   site: SiteConfig,
   options?: {
     embeddable?: boolean;
+    landingPage?: boolean;
     searchIndex?: string;
     llmsTxt?: string;
     llmsFullTxt?: string;
@@ -73,6 +74,12 @@ export async function buildSite(
     extraFiles?: Map<string, string | Buffer>;
   },
 ): Promise<BuildOutput> {
+  const landingPage = options?.landingPage !== false;
+  if (!landingPage && pages[0]?.outputPath === "index.html") {
+    throw new Error(
+      "landingPage: false leaves the root to the host, but this site's first page is the root.",
+    );
+  }
   const resolvedDir = resolve(outputDir);
   await rm(resolvedDir, { recursive: true, force: true });
   await mkdir(resolvedDir, { recursive: true });
@@ -93,7 +100,7 @@ export async function buildSite(
     await writeFile(resolve(resolvedDir, page.outputPath), html, "utf-8");
   }
 
-  if (pages.length > 0 && pages[0].outputPath !== "index.html") {
+  if (landingPage && pages.length > 0 && pages[0].outputPath !== "index.html") {
     const first = pages[0];
     const activeNav = withActivePage(navigation, first.tabSlug, first.pageSlug);
     const renderOptions = createRenderOptions(first, site, {

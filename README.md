@@ -125,6 +125,8 @@ export default defineConfig({
 });
 ```
 
+To give the mount root to an Astro page of your own, such as a product page at `/docs` above the documentation, set `landingPage: false`. Sourcey writes every page beneath the root and leaves the root itself to Astro, in dev and in the build. The first page then needs a path of its own, such as `introduction`.
+
 ## Configuration
 
 Create `sourcey.config.ts` in your project root:

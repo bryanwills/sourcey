@@ -2,6 +2,12 @@
 
 All notable changes to Sourcey. Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## 3.6.12 - 2026-09-30
+
+### Added
+
+- Add `landingPage: false` to `sourcey/astro`, so an Astro page can own the mount root while Sourcey writes every page beneath it.
+
 ## 3.6.11 - 2026-09-27
 
 ### Changed

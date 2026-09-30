@@ -248,4 +248,115 @@ describe("sourcey/astro", () => {
       await rm(outputDir, { recursive: true, force: true });
     }
   });
+
+  it("leaves the mount root to the host when landingPage is off", async () => {
+    const root = resolve(outputDir, "host-landing");
+    const client = resolve(root, "client");
+    await mkdir(client, { recursive: true });
+    await writeFile(resolve(client, "docs.html"), "<!doctype html><title>Host</title>");
+    const integration = sourceyAstro({
+      configDir: llmsSiteDir,
+      config: defineConfig({
+        name: "Docs",
+        navigation: {
+          tabs: [{ tab: "Docs", slug: "", groups: [{ group: "Start", pages: ["introduction"] }] }],
+        },
+      }),
+      routeBase: "/docs",
+      prettyUrls: "strip",
+      landingPage: false,
+      build: { generateOgImages: false },
+    });
+    try {
+      await integration.hooks["astro:config:setup"]!({
+        command: "build",
+        config: { root: dirUrl(root), site: "https://example.org" },
+        logger,
+        addWatchFile() {},
+        updateConfig() {},
+      });
+      await integration.hooks["astro:build:done"]!({ dir: dirUrl(client), logger });
+      expect(await readFile(resolve(client, "docs.html"), "utf8")).toContain("<title>Host</title>");
+      expect(existsSync(resolve(client, "docs/index.html"))).toBe(false);
+      expect(existsSync(resolve(client, "docs/introduction.html"))).toBe(true);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it("passes the mount root to the host in development when landingPage is off", async () => {
+    const root = resolve(outputDir, "host-landing-dev");
+    let plugins: Plugin[] = [];
+    const integration = sourceyAstro({
+      configDir: llmsSiteDir,
+      config: defineConfig({
+        name: "Docs",
+        navigation: {
+          tabs: [{ tab: "Docs", slug: "", groups: [{ group: "Start", pages: ["introduction"] }] }],
+        },
+      }),
+      routeBase: "/docs",
+      prettyUrls: "strip",
+      landingPage: false,
+    });
+    await integration.hooks["astro:config:setup"]!({
+      command: "dev",
+      config: { root: dirUrl(root) },
+      logger,
+      addWatchFile() {},
+      updateConfig(config) {
+        plugins = config.vite?.plugins ?? [];
+      },
+    });
+    const server = await createServer({
+      configFile: false,
+      root,
+      appType: "custom",
+      plugins,
+      server: { host: "127.0.0.1", port: 0 },
+      logLevel: "silent",
+    });
+    try {
+      await server.listen();
+      const origin = server.resolvedUrls!.local[0];
+      expect((await fetch(new URL("/docs", origin))).status).toBe(404);
+      expect((await fetch(new URL("/docs/introduction", origin))).status).toBe(200);
+    } finally {
+      await server.close();
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it("refuses landingPage off when the first page is the root", async () => {
+    const root = resolve(outputDir, "host-landing-index");
+    const client = resolve(root, "client");
+    await mkdir(client, { recursive: true });
+    await writeFile(resolve(root, "index.md"), "---\ntitle: Overview\n---\n\nThe contract.\n");
+    const integration = sourceyAstro({
+      configDir: root,
+      config: defineConfig({
+        name: "Docs",
+        navigation: {
+          tabs: [{ tab: "Docs", slug: "", groups: [{ group: "Start", pages: ["index"] }] }],
+        },
+      }),
+      routeBase: "/docs",
+      landingPage: false,
+      build: { generateOgImages: false },
+    });
+    try {
+      await integration.hooks["astro:config:setup"]!({
+        command: "build",
+        config: { root: dirUrl(root) },
+        logger,
+        addWatchFile() {},
+        updateConfig() {},
+      });
+      await expect(
+        integration.hooks["astro:build:done"]!({ dir: dirUrl(client), logger }),
+      ).rejects.toThrow("this site's first page is the root");
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
 });
