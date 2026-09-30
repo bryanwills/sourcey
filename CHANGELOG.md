@@ -8,6 +8,10 @@ All notable changes to Sourcey. Format based on [Keep a Changelog](https://keepa
 
 - Add `landingPage: false` to `sourcey/astro`, so an Astro page can own the mount root while Sourcey writes every page beneath it.
 
+### Changed
+
+- Point the “Docs by Sourcey” attribution in every theme to the docs engine's home, `sourcey.com/docs`.
+
 ## 3.6.11 - 2026-09-27
 
 ### Changed

@@ -115,7 +115,7 @@ describe("buildDocs (integration)", () => {
       const indexHtml = await readFile(resolve(outputDir, "index.html"), "utf-8");
       expect(indexHtml).toContain("<!DOCTYPE html>");
       expect(indexHtml).not.toContain("Redirecting");
-      expect(indexHtml).toMatch(/<a[^>]+href="https:\/\/sourcey\.com\/oss"[^>]*>Docs by Sourcey<\/a>/);
+      expect(indexHtml).toMatch(/<a[^>]+href="https:\/\/sourcey\.com\/docs"[^>]*>Docs by Sourcey<\/a>/);
       expect(indexHtml).not.toMatch(/Docs by\s*<a/);
       expect(indexHtml).not.toContain("sourcey-logo.png");
 
